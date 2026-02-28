@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kotak Hadiah Vitamin C</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;800&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle, #0f172a 0%, #020617 100%);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            color: white;
+        }
+
+        /* Layout Utama menyerupai Slaid */
+        .slide-container {
+            width: 100%;
+            max-width: 900px; 
+            height: 100%;
+            max-height: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; 
+            padding: 2rem;
+            position: relative;
+        }
+
+        /* Container untuk perspektif 3D */
+        .box-container {
+            perspective: 1000px;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .box {
+            position: relative;
+            width: 100px; 
+            height: 100px;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Sisi kotak */
+        .box-face {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: #dc2626; 
+            border: 2px solid #991b1b;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ribbon-v {
+            position: absolute;
+            width: 20px;
+            height: 100%;
+            background: #facc15;
+            z-index: 2;
+        }
+        .ribbon-h {
+            position: absolute;
+            width: 100%;
+            height: 20px;
+            background: #facc15;
+            z-index: 2;
+        }
+
+        .front  { transform: translateZ(50px); }
+        .back   { transform: rotateY(180deg) translateZ(50px); }
+        .left   { transform: rotateY(-90deg) translateZ(50px); }
+        .right  { transform: rotateY(90deg) translateZ(50px); }
+        .bottom { transform: rotateX(-90deg) translateZ(50px); background: #7f1d1d; }
+        
+        /* Penutup telah dibuang (display: none) */
+        .top { 
+            display: none;
+        }
+
+        .vitamin-c {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) translateZ(110px) scale(0);
+            font-weight: 800;
+            font-size: 3.5rem;
+            color: #fbbf24;
+            text-shadow: 0 0 20px rgba(251, 191, 36, 0.6), 0 5px 15px rgba(0,0,0,0.5);
+            transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 50; 
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Apabila "terbuka", hanya teks yang akan muncul */
+        .box.open .vitamin-c {
+            transform: translate(-50%, -120%) translateZ(150px) scale(1.1);
+            opacity: 1;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 300px;
+            height: 12px;
+            background: #1e293b;
+            border-radius: 20px;
+            border: 2px solid #334155;
+            overflow: hidden;
+        }
+
+        #volume-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #facc15, #ef4444);
+            transition: width 0.1s ease-out;
+        }
+
+        .shake {
+            animation: shake 0.1s infinite;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            50% { transform: translate(-1px, -2px) rotate(-1deg); }
+            100% { transform: translate(1px, 1px) rotate(0deg); }
+        }
+        
+        #reset-btn {
+            display: none;
+        }
+        #reset-btn.visible {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slide-container">
+        <!-- Bahagian Tengah (Kotak tanpa penutup) -->
+        <div class="box-container">
+            <div class="box" id="magic-box">
+                <div class="box-face front"><div class="ribbon-v"></div><div class="ribbon-h"></div></div>
+                <div class="box-face back"><div class="ribbon-v"></div><div class="ribbon-h"></div></div>
+                <div class="box-face left"><div class="ribbon-v"></div><div class="ribbon-h"></div></div>
+                <div class="box-face right"><div class="ribbon-v"></div><div class="ribbon-h"></div></div>
+                <div class="box-face bottom"></div>
+                <!-- Elemen penutup tidak lagi dipaparkan -->
+                <div class="vitamin-c" id="vitamin-text">🍊 Vitamin C</div>
+            </div>
+        </div>
+
+        <!-- Bahagian Bawah (Kawalan & Arahan) -->
+        <div class="flex flex-col items-center gap-4 w-full">
+            <div class="text-center">
+                <p class="text-slate-200 font-bold leading-tight" style="font-size: 60px;">
+                    Jerit <span class="text-yellow-400">"BUKA"</span>
+                </p>
+                <p class="text-slate-500 text-lg italic mt-2">untuk melihat isi di dalam!</p>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <span class="text-[10px] uppercase tracking-tighter text-slate-500">Kelantangan</span>
+                <div class="progress-container">
+                    <div id="volume-fill"></div>
+                </div>
+            </div>
+            
+            <div class="h-16 flex items-center justify-center mt-2">
+                <button id="start-btn" class="bg-gradient-to-r from-yellow-500 to-red-600 text-white px-10 py-4 rounded-full font-bold text-xl shadow-lg hover:scale-105 transition-transform active:scale-95">
+                    🎁 Mula Permainan
+                </button>
+
+                <button id="reset-btn" onclick="location.reload()" class="bg-slate-800 text-white px-8 py-3 rounded-full font-bold text-sm hover:bg-slate-700 transition-all border border-slate-600">
+                    Main Lagi
+                </button>
+            </div>
+
+            <p id="status-msg" class="text-[10px] text-slate-600 italic">Klik butang untuk akses mikrofon.</p>
+        </div>
+    </div>
+
+    <script>
+        const startBtn = document.getElementById('start-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const statusMsg = document.getElementById('status-msg');
+        const volumeFill = document.getElementById('volume-fill');
+        const magicBox = document.getElementById('magic-box');
+
+        let audioContext;
+        let analyser;
+        let microphone;
+        let recognition;
+        let isOpening = false;
+
+        async function initGame() {
+            try {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (!SpeechRecognition) {
+                    statusMsg.innerText = "Browser tidak sokong pengecaman suara.";
+                    return;
+                }
+
+                recognition = new SpeechRecognition();
+                recognition.lang = 'ms-MY';
+                recognition.continuous = true;
+                recognition.interimResults = true;
+
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                microphone = audioContext.createMediaStreamSource(stream);
+                microphone.connect(analyser);
+                analyser.fftSize = 256;
+
+                startBtn.style.display = 'none';
+                statusMsg.innerText = "Sensor Aktif! Jerit sekuat hati!";
+                statusMsg.classList.add('text-yellow-500');
+
+                recognition.start();
+                monitorVolume();
+
+            } catch (err) {
+                statusMsg.innerText = "Sila benarkan akses mikrofon.";
+                console.error(err);
+            }
+        }
+
+        function monitorVolume() {
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            function update() {
+                if (isOpening) return;
+                analyser.getByteFrequencyData(dataArray);
+                let sum = 0;
+                for (let i = 0; i < bufferLength; i++) sum += dataArray[i];
+                let average = sum / bufferLength;
+                let volumePercent = Math.min(100, (average / 70) * 100);
+                volumeFill.style.width = volumePercent + '%';
+
+                if (volumePercent > 80) magicBox.classList.add('shake');
+                else magicBox.classList.remove('shake');
+
+                if (volumePercent >= 99) openBox();
+                requestAnimationFrame(update);
+            }
+            update();
+        }
+
+        function openBox() {
+            if(isOpening) return;
+            isOpening = true;
+            magicBox.classList.remove('shake');
+            magicBox.classList.add('open');
+            statusMsg.innerText = "TERBUKA!";
+            if(recognition) recognition.stop();
+            setTimeout(() => { resetBtn.classList.add('visible'); }, 1500);
+        }
+
+        startBtn.addEventListener('click', initGame);
+    </script>
+</body>
+</html>
+    
+  </body>
+  
+</html>
